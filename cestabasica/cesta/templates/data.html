@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% for ca in cat %}
+       <h1>{{ca.nome}}</h1> <br>
+        {% for evento in eventos %}
+            {% if evento.categoria|stringformat:"s" == ca.nome|stringformat:"s" %}
+            <a href="/lista/{{evento.id}}/{{id}}">{{evento.nome}}</a> <br>
+            {% endif %}
+        {% endfor %}
+{% endfor %}
+
+</body>
+</html>
