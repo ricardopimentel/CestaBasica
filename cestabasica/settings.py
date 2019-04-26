@@ -25,7 +25,7 @@ SECRET_KEY = '&s6hv%ln08a6d6%-*e5&)&gyg@hd3qh7t0#gnl5$2!h7q!%jnt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -100,7 +100,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # mail service smtp
+EMAIL_HOST_USER = 'labirinto.paraiso@ifto.edu.br' # email id
+EMAIL_HOST_PASSWORD = 'psolabirinto' #password
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -119,3 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]

@@ -1,0 +1,24 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th width="70%" scope="col">Produto</th>
+        <th width="15%" scope="col">Preço</th>
+        <th width="15%" scope="col">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for p in prod %}
+    <tr>
+        <td>{{p.produto}}</td>
+        <td>{{p.preco}}</td>
+        <td>
+            <div id="ms"></div>
+<!--            <a href="/index/{{p.id}}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+            <a onclick="excluir('{{div}}', '{{p.id}}');"><span class="glyphicon glyphicon-trash"></span></a>
+        </td>
+    </tr>
+    {% endfor %}
+    <tr>
+    </tbody>
+</table>

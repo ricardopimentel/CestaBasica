@@ -1,15 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<a href="/logout"> Sair</a>
 
-<br>
-{% for evento in eventos %}
-       <a href="/data/{{evento.id}}">{{evento.mes}}/{{evento.year}}</a> <br>
-{% endfor %}
+<html lang="en-us">
+<head>
+    <title>Site administration | Django site admin</title>
+    {% load static %}
+    <!--    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!--    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">-->
+    <!--    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet" type="text/css">-->
+    <!--    <link href="{% static 'css/freelancer.min.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/dashboard.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+    <meta name="robots" content="NONE,NOARCHIVE">
+</head>
+
+<body class=" dashboard">
+
+<div id="container">
+    <div id="header">
+        <div id="branding">
+            <h1 id="site-name"><a href="/admin/">Django administration</a></h1>
+        </div>
+
+
+        <div id="user-tools">
+            Welcome,
+            <strong>{{ user.get_username }}</strong>.
+            <a href="/">View site</a> /
+            <a href="/admin/password_change/">Change password</a> /
+            <a href="/admin/logout/">Log out</a>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6" style="text-align: center;">
+                <button class="btn btn-secondary" onclick="mudaAno('-1');"><span style="font-size: 15px"
+                                                                                 class="glyphicon glyphicon-chevron-left"></span>
+                </button>
+                <input style="text-align: center;size:20px;font-weight:bold;" type="text" id="ano">
+                <button class="btn btn-secondary" onclick="mudaAno('+1');"><span style="font-size: 15px"
+                                                                                 class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+
+                <br><br>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('1');">Janeiro</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('2');">Fevereiro</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('3');">Março</button>
+                <br><br>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('4');">Abril</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('5');">Maio</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('6');">Junho</button>
+                <br><br>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('7');">Julho</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('8');">Agosto</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('9');">Setembro</button>
+                <br><br>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('10');">Outubro</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('11');">Novembro</button>
+                <button class="btn btn-info" style="width: 90px;" onclick="vaiAno('12');">Dezembro</button>
+
+<br><br>
+
+            </div>
+
+            <div class="col-md-6">
+
+                {% if user.is_superuser %}
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <a href="/admin/cesta/produto/" class="btn btn-info btn-block"> <span style="font-size: 80px"
+                                                                                              class="glyphicon glyphicon-barcode"></span><br><b
+                                class="h2">Produtos</b></a><br>
+                    </div>
+                    <div class="col-md-4 ml-3">
+                        <a href="/admin/cesta/marca/" class="btn btn-info btn-block"> <span style="font-size: 80px"
+                                                                                            class="glyphicon glyphicon-gift"></span><br><b
+                                class="h2">Marcas</b></a><br>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/admin/cesta/tipo/" class="btn btn-info btn-block"> <span style="font-size: 80px"
+                                                                                           class="glyphicon glyphicon-th-large"></span><br><b
+                                class="h2">Tipos</b></a><br>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/admin/cesta/estabelecimento/" class="btn btn-info btn-block"> <span style="font-size: 80px" class="glyphicon glyphicon-shopping-cart"></span><br><b
+                                class="h2">Comércios</b></a><br>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/admin/cesta/categoria/" class="btn btn-info btn-block"> <span style="font-size: 80px" class="glyphicon glyphicon-th-list"></span><br><b
+                                class="h2">Categorias</b></a><br>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="/admin/auth/user/" class="btn btn-info btn-block"> <span style="font-size: 80px" class="glyphicon glyphicon-user"></span><br><b
+                                class="h2">Usuários</b></a><br>
+                    </div>
+
+                </div>
+
+
+                <a href="/admin/" class="btn btn-info btn-block"><b
+                        class="h2">Todas as configurações</b></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript">
+    var dt = new Date();
+
+    var _ano = dt.getFullYear();
+
+    document.getElementById('ano').value = _ano;
+
+
+    function mudaAno(ano) {
+        if (ano == '+1') {
+            _ano = _ano + 1;
+            document.getElementById('ano').value = _ano;
+        } else {
+            _ano = _ano - 1;
+            document.getElementById('ano').value = _ano;
+        }
+    }
+
+    function vaiAno(mes) {
+        location.href = "data/" + mes + "/" + _ano;
+    }
+</script>
+
 </html>

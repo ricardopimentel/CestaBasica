@@ -24,8 +24,10 @@ urlpatterns = [
     path('login/submit', submit_login),
     path('index', index),
     path('logout', sair),
-    path('data/<int:id>/', dados),
-    path('lista/<int:id>/<int:pk>', lista),
+    path('data/<int:mes>/<ano>', dados),
+    path('estatistica/<int:id>/', estatistica),
+    path('lista/<int:evento>/<int:super>', lista),
+    path('request/<int:produto>/<int:evento>/<int:estabelecimeto>/<str:preco>/<str:div>/<int:boo>', requestprod),
     path('cad/<int:id>/<int:pk>', cadevento),
     path('updata/<int:id>/<int:pk>', updados)
 ]

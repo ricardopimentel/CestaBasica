@@ -1,15 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-us">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Site administration | Django site admin</title>
+    {% load static %}
+    <!--    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!--    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">-->
+    <!--    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet" type="text/css">-->
+    <!--    <link href="{% static 'css/freelancer.min.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/dashboard.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+    <meta name="robots" content="NONE,NOARCHIVE">
 </head>
-<body>
-        {% for evento in eventos %}
-            <a href="/updata/{{evento.id}}/{{id}}">{{evento.preco}}/{{evento.estabelecimento}}/{{evento.produto}}/{{evento.evento}}</a> <br>
+
+<body class=" dashboard">
+
+<div id="container">
+    <div id="header">
+        <div id="branding">
+            <h1 id="site-name"><a href="/admin/">Django administration</a></h1>
+        </div>
+
+
+        <div id="user-tools">
+            Welcome,
+            <strong>{{ user.get_username }}</strong>.
+            <a href="/">View site</a> /
+            <a href="/admin/password_change/">Change password</a> /
+            <a href="/admin/logout/">Log out</a>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+
+        <div class="row" id="super">
+            <h1 align="center">{{mes_ano}}</h1>
+            <div style="text-align: center" class="col-md-9">
+                <button type="button" class="btn btn-secondary btn-lg btn-block">{{estabelecimento}}</button>
+            </div>
+            <div style="text-align: center" class="col-md-3">
+                <button type="button" class="btn btn-secondary btn-lg btn-block">Voltar</button>
+            </div>
+        </div>
+        <br><br>
+        <!--        <a onclick="alternar_visibilidade('texto1');">-->
+        <!--            [Mostrar/Ocultar] Mensagem</a>-->
+        <!--        <table border="1px">-->
+        <!--            <tr>-->
+        <!--                <th>Grandes Areas</th>-->
+        <!--                <th>-->
+        <!--                    <button onclick="alternar_visibilidade('texto1');">Exibir</button>-->
+        <!--                </th>-->
+        <!--            </tr>-->
+        <!--        </table>-->
+        <!--        <div id="texto1" style="display:none;">-->
+        <!--            <label><input type="checkbox" value="">Option 2</label>-->
+        <!--        </div>-->
+        {% for cat in categoria %}
+        <button style="margin-bottom: 15px" onclick="alternar_visibilidade('cat{{cat.id}}')" class="form-control">
+            {{cat.nome}}
+        </button>
+        <div id="cat{{cat.id}}" style="display:none;">
+            {% for tipo in tipos %}
+            {% if tipo.categoria|stringformat:"s" == cat.nome|stringformat:"s" %}
+            <button type="button" style="margin-bottom: 5px;height: 23px;font-size : 15px;padding-top: 0px;"
+                    class="btn btn-primary btn-lg btn-block">{{tipo.nome}}
+            </button>
+            <div>
+                <div id="tipo{{tipo.id}}">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="70%" scope="col">Produto</th>
+                            <th width="15%" scope="col">Preço</th>
+                            <th width="15%" scope="col">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for pes in pesquisa %}
+                        {% if tipo.id|stringformat:"s" == pes.tipo_id|stringformat:"s" %}
+                        <tr>
+                            <td>{{pes.produto}}</td>
+                            <td>{{pes.preco}}</td>
+                            <td>
+                                <div id="ms"></div>
+                                <a onclick="excluir('tipo{{tipo.id}}', '{{pes.id}}');"><span
+                                        class="glyphicon glyphicon-trash"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <!--                                <a href="/index"><span class="glyphicon glyphicon-trash"></span></a>-->
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        <tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table>
+                    <td width="70%">
+                        <select class="form-control" id="tiposelect{{tipo.id}}">
+                            {% for prod in produto %}
+                            {% if tipo.id|stringformat:"s" == prod.tipo_id|stringformat:"s" %}
+                            <option value="{{prod.id}}">{{prod}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td width="15%"><input type="number" id="tiponunber{{tipo.id}}" class="form-control"></td>
+                    <td width="15%">
+                        <input type="submit"
+                               onClick="request('tipo{{tipo.id}}','tiposelect{{tipo.id}}','tiponunber{{tipo.id}}')"
+                               value="adicionar" class="form-control">
+                    </td>
+                    </tr>
+                </table>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
         {% endfor %}
 
 
-<a href="/cad/{{id}}/{{id2}}">cadastrar novo</a>
+        <script type="application/javascript">
+
+
+            function alternar_visibilidade(id) {
+                var e = document.getElementById(id);
+                if (e.style.display == 'block')
+                    e.style.display = 'none';
+                else
+                    e.style.display = 'block';
+            }
+
+
+            var sup = '{{sup}}';
+            var evento = '{{evento}}';
+
+            function request(iddiv, produto_id, preco) {
+                var produto_id = document.getElementById(produto_id).value;
+                var preco = document.getElementById(preco).value;
+                // alert(iddiv + "/" + evento + "/" + produto_id + "/" + sup + "/" + preco);
+                if (preco == "") {
+
+                    alert('Valor Inválido');
+                } else if (preco < 0.01) {
+                    alert('Valor não é possível');
+                } else if (preco > 10000) {
+                    alert('Valor muito alto');
+                } else {
+                    var ajax = new XMLHttpRequest();
+
+                    // Seta tipo de requisição e URL com os parâmetros
+                    ajax.open("GET", "/request/" + produto_id + "/" + evento + "/" + sup + "/" + preco + "/" + iddiv + "/1", true);
+
+                    // Envia a requisição
+                    ajax.send();
+
+                    // Cria um evento para receber o retorno.
+                    ajax.onreadystatechange = function () {
+                        // Caso o state seja 4 e o http.status for 200, é porque a requisiçõe deu certo.
+                        if (ajax.readyState == 4 && ajax.status == 200) {
+                            var data = ajax.responseText;
+                            // Retorno do Ajax
+                            if (data.indexOf('true') > -1) {
+                                alert("Esse produto já está incluso para esse mês");
+                            } else {
+                                document.getElementById(iddiv).innerHTML = data;
+                            }
+                            // console.log("/request/" + produto_id + "/" + evento + "/" + sup + "/" + preco +"/"+ iddiv+ "/1");
+                        }
+                    }
+
+                }
+
+            }
+
+            function excluir(iddiv, produto_id) {
+                var r = confirm("Deseja excluir?");
+                // var produto_id = document.getElementById(produto_id).value;
+                // var preco = document.getElementById(preco).value;
+                // alert(iddiv + "/" + evento + "/" + produto_id + "/" + sup + "/" + preco);
+
+                if (r == true) {
+                    var ajax = new XMLHttpRequest();
+
+                    // Seta tipo de requisição e URL com os parâmetros
+                    ajax.open("GET", "/request/" + produto_id + "/" + evento + "/" + sup + "/0/" + iddiv + "/2", true);
+
+                    // Envia a requisição
+                    ajax.send();
+
+                    // Cria um evento para receber o retorno.
+                    ajax.onreadystatechange = function () {
+                        // Caso o state seja 4 e o http.status for 200, é porque a requisiçõe deu certo.
+                        if (ajax.readyState == 4 && ajax.status == 200) {
+                            var data = ajax.responseText;
+                            // Retorno do Ajax
+                            // alert('ok');
+                            // console.log("/request/" + produto_id + "/" + evento + "/" + sup + "/0/" + iddiv + "/2");
+                            // / if(data.indexOf('table') > -1){
+                            //  var tipo = String(data);
+                            // if (tipo.length < 1000){
+                            //      alert("Esse produto já está incluso para esse mês");
+                            //  }
+                            //  else {
+                            //      console.log(tipo.length);
+                            //      alert(tipo.length);
+                            //      document.write(tipo.length);
+                            document.getElementById(iddiv).innerHTML = data;
+                            // }
+
+                            // console.clear();
+                            // console.log(data);
+
+                        }
+                    }
+                }
+
+            }
+        </script>
+
+
+        <!--        <a href="/cad/{{id}}/{{id2}}">cadastrar novo</a>-->
+    </div>
+</div>
 </body>
 </html>

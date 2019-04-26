@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Freelancer - Start Bootstrap Theme</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css">
+
+    <!-- Plugin CSS -->
+    <link href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/freelancer.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Cesta Básica</a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button"
+                data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/">Inicio</a>
+                </li>
+<!--                <li class="nav-item mx-0 mx-lg-1">-->
+<!--                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">Sobre</a>-->
+<!--                </li>-->
+                <!--                <li class="nav-item mx-0 mx-lg-1">-->
+                <!--                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contato</a>-->
+                <!--                </li>-->
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--<header class="masthead bg-primary text-white text-center">-->
+<!--    <div class="container">-->
+<!--&lt;!&ndash;        <h1 class="text-uppercase mb-0">{{mes}}/{{ano}}</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;        <img class="img-fluid mb-5 d-block mx-auto" width="20%" src="{% static 'img/carrinho.png' %}" alt="">&ndash;&gt;-->
+<!--        <h2 class="font-weight-light mb-0">Cesta Básica</h2>-->
+<!--&lt;!&ndash;        <a class="btn btn-xl btn-outline-light" href="/estatistica/0/">&ndash;&gt;-->
+<!--&lt;!&ndash;            <i class="fas fa-history mr-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;            Histórico&ndash;&gt;-->
+<!--&lt;!&ndash;        </a>&ndash;&gt;-->
+<!--    </div>-->
+<!--</header>-->
+<br><br>
+
+
+<section class="portfolio" id="portfolio">
+    <div class="container">
+        <header>
+            <h1>Periodo Mensal</h1>
+        </header>
+<div class="row">
+        <div class="col-md-6">
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+            <p>
+            <div class="chartjs-wrapper">
+                <canvas id="chartjs-0" class="chartjs" width="undefined" height="undefined"></canvas>
+            <script>
+            new Chart(document.getElementById("chartjs-0"),
+                {
+                    "type": "line", "data": {
+                        "labels": ["{{ ma.11 }}", "{{ ma.10 }}", "{{ ma.9 }}", "{{ ma.8 }}", "{{ ma.7 }}", "{{ ma.6 }}", "{{ ma.5 }}", "{{ ma.4 }}", "{{ ma.3 }}", "{{ ma.2 }}", "{{ ma.1 }}", "{{ ma.0 }}"],
+                        "datasets": [{
+                            "label": "Grafico da Cesta Básica",
+                            "data": [{{ pc.11 |floatformat:2  }}, {{ pc.10 |floatformat:2  }}, {{ pc.9 |floatformat:2  }}, {{ pc.8 |floatformat:2  }}, {{ pc.7 |floatformat:2  }}, {{ pc.6 |floatformat:2  }}, {{ pc.5 |floatformat:2  }}, {{ pc.4 |floatformat:2  }}, {{ pc.3 |floatformat:2  }}, {{ pc.2 |floatformat:2  }}, {{ pc.1 |floatformat:2  }}, {{ pc.0 |floatformat:2  }}],
+                            "fill": false,
+                            "borderColor": "rgb(75, 192, 192)",
+                            "lineTension": 0.1
+                        }]
+                    }, "options": {}
+                });
+            </script>
+        </div>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <th>Mês</th>
+                    <th>Ano</th>
+                    <th>Preço</th>
+                </tr>
+                {% for mes, ano, preco in Cesta %}
+                <tr>
+                    <td>{{mes}}</td>
+                    <td>{{ano}}</td>
+                    <td>{{preco |floatformat:2}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div></div>
+    </div>
+</section>
+
+
+<footer>
+        <div class="copyright py-4 text-center text-white">
+        <div class="container">
+            <b>Contato: labirinto.paraiso@ifto.edu.br</b><br>
+            <small>Instituto Federal de Educação, Ciência e Tecnologia do Tocantins</small><br>
+            <small>Campus Paraíso do Tocantins</small><br>
+            <small>Copyright © 2019</small><br>
+            <small><i>É concedida permissão para copiar e distribuir todos os dados sob os termos da GNU Free Documentation License, Versão 1.3 publicada pela Free Software Foundation.</i></small>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Plugin JavaScript -->
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+<script src="{% static 'vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+<script src="{% static 'js/contact_me.js' %}"></script>
+
+<!-- Custom scripts for this template -->
+<script src="{% static 'js/freelancer.min.js' %}"></script>
+</body>
+</html>
