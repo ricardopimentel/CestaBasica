@@ -51,6 +51,7 @@
 <body>
 <div class="login-form">
     <form action="login/submit" method="post">
+            {% csrf_token %}
         <h2 class="text-center">Controle de Acesso</h2>
         <div class="form-group">
             <input type="text" class="form-control" name="user" placeholder="Usuário" required="required">
