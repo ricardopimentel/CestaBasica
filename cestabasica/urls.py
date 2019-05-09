@@ -29,5 +29,6 @@ urlpatterns = [
     path('lista/<int:evento>/<int:super>', lista),
     path('request/<int:produto>/<int:evento>/<int:estabelecimeto>/<str:preco>/<str:div>/<int:boo>', requestprod),
     path('cad/<int:id>/<int:pk>', cadevento),
-    path('updata/<int:id>/<int:pk>', updados)
+    path('updata/<int:id>/<int:pk>', updados),
+    path('relatorio', relatorio)
 ]

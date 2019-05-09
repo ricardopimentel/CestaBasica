@@ -106,6 +106,11 @@ def estatistica(request, id):
     # return HttpResponse(data['tree'])
     return render(request, 'estatistica.html', data)
 
+def relatorio(request):
+    data = {}
+    data['eventos'] = evento.objects.all()
+    return render(request, 'relatorio.html', data)
+
 
 def entrar(request):
     if not request.user.is_authenticated:
