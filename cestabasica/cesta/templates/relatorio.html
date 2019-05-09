@@ -27,6 +27,7 @@
 
 </head>
 
+
 <body id="page-top">
 
 <!-- Navigation -->
@@ -78,7 +79,44 @@
             <h1>{{titulo}}</h1>
         </header>
         <div class="row">
+            {% for id, mes, ano in meses %}
+            <!--            {{mes}} - {{ano}}-->
+            <table class="table table-bordered">
+                <thead>
+                <tr bgcolor="#2C3E50">
+                    <th class="text-center" colspan="2"><span style="color:white">{{mes}} - {{ano}}</span></th>
+                    <!--                    <th>...</th>-->
+                </tr>
+                </thead>
+                <tbody>
 
+
+                {% for nome, evento, preco in categoria %}
+                {% if id|stringformat:"s" == evento|stringformat:"s" %}
+                <tr>
+                    <th width="50%">{{nome}}</th>
+                    <td>{{preco |floatformat:2}}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+
+                {% for evento, preco in cesta %}
+                {% if id|stringformat:"s" == evento|stringformat:"s" %}
+                <tr bgcolor="#53BC9C">
+                    <th width="50%">Preço da Cesta</th>
+                    <td>{{preco |floatformat:2}}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endfor %}
+
+            <!--            {% for nome, evento, preco in categoria %}-->
+
+
+            <!--            {{nome}} - {{preco}}<br>-->
+            <!--            {% endfor %}-->
 
         </div>
     </div>
