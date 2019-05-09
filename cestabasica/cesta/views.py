@@ -23,43 +23,18 @@ def home(request):
     ano = now.year
     mes = now.month
 
-    # Pega a quantidade de produtos do mes atual
-    text = "select count(DISTINCT tipo_id) as qtd from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id inner join cesta_tipo as ct on ct.id = cc.tipo_id  where cp.evento_id =  (select id from cesta_evento where mes = %s and ano = %s) and ct.cestabasica = 1" % (
-    mes, ano)
-    cursor.execute(text)
-    qtdP = cursor.fetchone()
-    # return HttpResponse(text)
-    # Pega a quantidade de produtos do mes atual
-    # text = "select Count(*) from cesta_tipo where cestabasica = 1"
-    # cursor.execute(text)
-    # qtdC = cursor.fetchone()
-    qtdC = 12
-    qtdP = int(qtdP[0])
-
-
-
-    while qtdP < 12:
-
-        if mes == 1:
-            mes = 12
-            ano = ano - 1
-        else:
-            mes = mes - 1
-        text = "select count(DISTINCT tipo_id) as qtd from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id where cp.evento_id =  (select id from cesta_evento where mes = %s and ano = %s)" % (
-            mes, ano)
-        cursor.execute(text)
-        qtdP = cursor.fetchone()
-        qtdP = int(qtdP[0])
 
     # Calcula o valor total da cesta básica do último mês com todos os dados
-    text = "select sum(preco) as preco_cesta from (select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id = (select id from cesta_evento where mes = %s and ano = %s) and ct.cestabasica =1  group by ct.nome)" % (
-    mes, ano)
+    text = "select evento_id, mes, ano, sum(preco) as preco from (select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, cp.evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id in (select evento_id from (select count(distinct(tipo_id)) as qtdcesta, evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id inner join cesta_tipo as ct on ct.id = cc.tipo_id  where ct.cestabasica = 1 group by evento_id) where qtdcesta >= 12) and ct.cestabasica =1  group by ct.nome, evento_id) inner join cesta_evento as ct on evento_id = ct.id group by evento_id order by ano desc, mes desc limit 1"
     cursor.execute(text)
-    tx = "%s" % cursor.fetchone()
-    data['cesta'] = tx
+    tx =  cursor.fetchone()
+    data['cesta'] = tx[3]
+    mes = tx[1]
+    ano = tx [2]
+
 
     # Calcula o valor dos produtos da cesta básica do último mês com todos os dados
-    text = "select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, ct.imagem, ct.cestabasica from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id = (select id from cesta_evento where mes = %s and ano = %s) group by ct.nome" % (
+    text = "select ct.id, ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, ct.imagem, ct.cestabasica from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id = (select id from cesta_evento where mes = %s and ano = %s) group by ct.nome" % (
     mes, ano)
     cursor.execute(text)
     data['ProCesta'] = cursor.fetchall()
@@ -100,34 +75,34 @@ def estatistica(request, id):
     now = datetime.now()
     ano = now.year
     mes = now.month
+    value = None
+    titulo = None
 
-    value = 0
 
-    count = 12
-    # while count != 12:
-    #     if mes == 1:
-    #         mes = 12
-    #         ano = ano-1
-    #     else:
-    #         mes = mes-1
-    text = "select mes, ano, sum(preco) as preco from (select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, cp.evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id in (select evento_id from (select count(distinct(tipo_id)) as qtdcesta, evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id inner join cesta_tipo as ct on ct.id = cc.tipo_id  where ct.cestabasica = 1 group by evento_id) where qtdcesta >= 12) and ct.cestabasica =1  group by ct.nome, evento_id) inner join cesta_evento as ct on evento_id = ct.id group by evento_id"
-    cursor.execute(text)
-    value = cursor.fetchall()
-    data['Cesta'] = value
+    if (id == 0):
+        text = "select 'Periodo Mensal', mes, ano, sum(preco) as preco from (select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, cp.evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id in (select evento_id from (select count(distinct(tipo_id)) as qtdcesta, evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id inner join cesta_tipo as ct on ct.id = cc.tipo_id  where ct.cestabasica = 1 group by evento_id) where qtdcesta >= 12) and ct.cestabasica =1  group by ct.nome, evento_id) inner join cesta_evento as ct on evento_id = ct.id group by evento_id order by ano desc, mes desc"
+        cursor.execute(text)
+        value = cursor.fetchall()
+        data['Cesta'] = value
+    else:
+        text = "select (select nome from cesta_tipo where id = %s) as tipo, (select mes from cesta_evento where id = evento_id) as mes, (select ano from cesta_evento where id = evento_id) as ano, avg(preco) as preco from cesta_pesquisa_preco where produto_id in (select id from cesta_produto where tipo_id = %s) group by evento_id order by ano desc, mes desc" %(id, id)
+        cursor.execute(text)
+        value = cursor.fetchall()
+        data['Cesta'] = value
 
     ma = {}
     pc = {}
     count = 0
-    for mes, ano, preco in value:
+    for cat, mes, ano, preco in value:
+        titulo = cat
         if count < 12:
             ma[count] = str(mes)+"/"+str(ano)
             pc[count] = preco
         count = count+1
 
-    # tree[1] = "2"
-
     data['ma'] = ma
     data['pc'] = pc
+    data['titulo'] = titulo
     # return HttpResponse(data['tree'])
     return render(request, 'estatistica.html', data)
 

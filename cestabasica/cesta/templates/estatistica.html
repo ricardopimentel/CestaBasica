@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 
@@ -75,7 +75,7 @@
 <section class="portfolio" id="portfolio">
     <div class="container">
         <header>
-            <h1>Periodo Mensal</h1>
+            <h1>{{titulo}}</h1>
         </header>
 <div class="row">
         <div class="col-md-6">
@@ -108,7 +108,7 @@
                     <th>Ano</th>
                     <th>Preço</th>
                 </tr>
-                {% for mes, ano, preco in Cesta %}
+                {% for cat, mes, ano, preco in Cesta %}
                 <tr>
                     <td>{{mes}}</td>
                     <td>{{ano}}</td>
