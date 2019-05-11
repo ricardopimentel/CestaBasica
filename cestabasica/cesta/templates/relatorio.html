@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Freelancer - Start Bootstrap Theme</title>
+    <title>Cesta Básica</title>
     {% load static %}
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -84,7 +84,44 @@
             <table class="table table-bordered">
                 <thead>
                 <tr bgcolor="#2C3E50">
-                    <th class="text-center" colspan="2"><span style="color:white">{{mes}} - {{ano}}</span></th>
+                    <th class="text-center" colspan="2"><span style="color:white">
+                        {% if mes|stringformat:"s" == "1" %}
+                        Janeiro
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "2" %}
+                        Ferreiro
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "3" %}
+                        Março
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "4" %}
+                        Abril
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "5" %}
+                        Maio
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "6" %}
+                        Junho
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "7" %}
+                        Julho
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "8" %}
+                        Agosto
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "9" %}
+                        Setembro
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "10" %}
+                        Outubro
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "11" %}
+                        Novembro
+                        {% endif %}
+                        {% if mes|stringformat:"s" == "12" %}
+                        Dezembro
+                        {% endif %}
+                        {{ano}}</span></th>
                     <!--                    <th>...</th>-->
                 </tr>
                 </thead>
