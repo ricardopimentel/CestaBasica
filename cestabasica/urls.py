@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from cestabasica.cesta.views import *
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +31,7 @@ urlpatterns = [
     path('request/<int:produto>/<int:evento>/<int:estabelecimeto>/<str:preco>/<str:div>/<int:boo>', requestprod),
     path('cad/<int:id>/<int:pk>', cadevento),
     path('updata/<int:id>/<int:pk>', updados),
-    path('relatorio', relatorio)
+    path('relatorio', relatorio),
+    path('api', csrf_exempt(api)),
+    # path(r'^ap', views.api.as_view()),
 ]

@@ -1,4 +1,5 @@
 import ast
+import json
 from datetime import datetime
 from decimal import Decimal
 from django import forms
@@ -302,3 +303,47 @@ def cadevento(request, id, pk):
 def sair(request):
     logout(request)
     return redirect('/')
+
+
+def api(request):
+    cursor = connection.cursor()
+    data = {}
+
+    text = "select * from cesta_evento where id in (select distinct(evento_id) from cesta_pesquisa_preco) order by ano desc, mes desc"
+    cursor.execute(text)
+    value = cursor.fetchall()
+    data['meses'] = value
+
+    text = "select ct.nome, evento_id, avg(preco) as preco from cesta_pesquisa_preco as cpp inner join cesta_produto as cp on cpp.produto_id = cp.id inner join cesta_tipo as ct on cp.tipo_id = ct.id group by cpp.evento_id,ct.id order by ct.nome"
+    cursor.execute(text)
+    value = cursor.fetchall()
+    data['categoria'] = value
+
+    text = "select evento_id, sum(preco) as preco from (select ct.nome, avg(((cp.preco*ct.quantidade)/cs.quantidade)) as preco, cp.evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cs on  cp.produto_id = cs.id inner join cesta_tipo as ct on cs.tipo_id = ct.id where cp.evento_id in (select evento_id from (select count(distinct(tipo_id)) as qtdcesta, evento_id from cesta_pesquisa_preco as cp inner join cesta_produto as cc on cp.produto_id = cc.id inner join cesta_tipo as ct on ct.id = cc.tipo_id  where ct.cestabasica = 1 group by evento_id) where qtdcesta >= 12) and ct.cestabasica =1  group by ct.nome, evento_id) inner join cesta_evento as ct on evento_id = ct.id group by evento_id"
+    cursor.execute(text)
+    value = cursor.fetchall()
+    data['cesta'] = value
+
+    var = '{"produto": {'
+    # var = var[:-1]
+    for eventoid, mes, ano in data['meses']:
+        var = '%s "%s-%s": {' % (var, mes, ano)
+        for produto, evento, preco in data['categoria']:
+            if evento == eventoid:
+                var = '%s "%s":%s,' % (var, produto, preco)
+        var = var[:-1]
+        var = '%s },' % var
+    var = var[:-1]
+    var = '%s }' % var
+    var = '%s ,"cesta":{  ' % var
+    for eventoid, mes, ano in data['meses']:
+        # var = '%s ' % (var, mes, ano)
+        for evento, valor in data['cesta']:
+            if evento == eventoid:
+                var = '%s "%s-%s": %s,' % (var, mes, ano, valor)
+        # var = var[:-1]
+        # var = '%s,' % var
+    var = var[:-1]
+    var = '%s }}' % var
+
+    return HttpResponse(var)
