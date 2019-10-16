@@ -1,0 +1,1 @@
+web: gunicorn CestaBasica.wsgi --log-file -
